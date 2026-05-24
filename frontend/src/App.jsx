@@ -1,3 +1,5 @@
+
+
 import { useEffect, useState } from 'react';
 import './App.css';
 
@@ -6,14 +8,15 @@ import StatCard from "./components/StatCard.jsx";
 import SpendingCharts from './components/SpendingCharts.jsx';
 import CategoryChart from './components/CategoryChart.jsx';
 import TransactionList from './components/TransactionList.jsx';
+import Login from "./pages/login.jsx";
 import Model from "./components/Model.jsx";
 
 
 import {getExpenses,updateExpense,deleteExpense,createExpense} from "./axios.js"
-import { DollarSign, ShoppingCart, TrendingUp, Wallet } from 'lucide-react';
+import { IndianRupee, ShoppingCart, TrendingUp, Wallet } from 'lucide-react';
 
 function App() {
-
+  const token = localStorage.getItem("token");
   const [expenses,setExpenses] = useState([]);
   const [isLoading,setLoading] = useState(false);
   const [isModelOpen,setModelOpen] = useState(false);
@@ -164,7 +167,8 @@ function App() {
 };
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-slate-50 via-gray-50 to-slate-100">
+    <div className="min-h-screen bg-linear-to-br from-slate-50 via-gray-50
+           to-slate-100">
       
       <Header onAddExpense={openAddExpenseModal} />
 
@@ -173,7 +177,7 @@ function App() {
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <StatCard 
-          value = {`$${stats.total.toFixed(2)}`} title = "Total spent"
+          value = {`₹${stats.total.toFixed(2)}`} title = "Total spent"
           icon = {Wallet}
           subtitle = "This month"
           bgColor = "bg-gradient-to-br from-indigo-500 to-indigo-600" />
@@ -185,14 +189,14 @@ function App() {
           bgColor = "bg-gradient-to-br from-indigo-500 to-indigo-600" />
 
           <StatCard 
-          value = {`$${stats.avg.toFixed(2)}`} title = "Average"
+          value = {`₹${stats.avg.toFixed(2)}`} title = "Average"
           icon = {TrendingUp}
           subtitle = "This month"
           bgColor = "bg-gradient-to-br from-indigo-500 to-indigo-600" />
 
           <StatCard 
-          value = {`$${stats.highest.toFixed(2)}`} title = "Highest transaction"
-          icon = {DollarSign}
+          value = {`₹${stats.highest.toFixed(2)}`} title = "Highest transaction"
+          icon = {IndianRupee}
           subtitle = "This month"
           bgColor = "bg-gradient-to-br from-indigo-500 to-indigo-600" />
         </div>
@@ -202,7 +206,7 @@ function App() {
           
           {/* Line Chart */}
           <div className="md:col-span-2">
-            <SpendingCharts data={expenses} />
+            <SpendingCharts expenses={expenses} />
           </div>
 
           {/* Pie Chart */}
@@ -217,6 +221,7 @@ function App() {
         searchTerm = {searchTerm}
         setSearchTerm = {setSearchTerm}
         filterCategory = {filterCategory}
+        setFilterCategory={setFilterCategory}
         
         />
         <Model 

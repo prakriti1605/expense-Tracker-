@@ -6,7 +6,9 @@ import { ApiResponse } from "../utils/api-response.js";
 
 export const getExpenses = async (req, res, next) => {
   try {
-    const expenses = await Expense.find().sort({ date: -1 });
+    const expenses = await Expense.find({
+        //userId: req.user.id
+    }).sort({ date: -1 });
 
     return res
     .status(200)
@@ -15,13 +17,14 @@ export const getExpenses = async (req, res, next) => {
     );
 
   } catch (error) {
-    console.log((error));
+    console.error("getExpenses error:", error);
     next(error)
   }
 };
 export const addExpense = async (req,res,next) => {
     try{
         const {description,amount,category,date,notes} = req.body;
+
         if(!description || !amount || !category){
             throw new ApiError(400, "Required fields are missing");
         }
@@ -32,7 +35,8 @@ export const addExpense = async (req,res,next) => {
             amount,
             category,
             date,
-            notes
+            notes,
+           // userId: req.user.id
         });
     return res.status(201)
     .json(
@@ -40,13 +44,17 @@ export const addExpense = async (req,res,next) => {
     );
     }
 catch(error){
+    console.error("addExpense error:", error);
     next(error);
 }
 }
 export const deleteExpense = async(req,res,next) => {
     try {
         const {id} = req.params;
-        const expense = await Expense.findByIdAndDelete(id);
+        const expense = await Expense.findByIdAndDelete({
+            _id : id,
+            // userId: req.user.id
+        });
 
         if(!expense){
             throw new ApiError(404, "expense to be deleted not found");
@@ -64,8 +72,8 @@ export const deleteExpense = async(req,res,next) => {
 
 export const updateExpense = async(req,res,next) => {
     
-    const {id} = req.params;
-    const {description,amount,category,date,notes} = req.body;
+    const {id} = req.params; // this is the id of expense we have to update
+    const {description,amount,category,date,notes} = req.body; // this is the new data we have to swap with.
 
     try{
     //validate required fields
@@ -73,11 +81,20 @@ export const updateExpense = async(req,res,next) => {
         throw new ApiError(400,"required fields are missing");
     }
     //find and update expense
-    const updatedExpense = await Expense.findByIdAndUpdate( id, {
-        description,amount,category,date,notes },
+    const updatedExpense = await Expense.findByIdAndUpdate( 
+        {_id : id,
+        //userId: req.user.id
+        },
+        {
+            description,
+            amount,
+            category,
+            date,
+            notes 
+        },
         {new: true, runValidators: true })
-        //by default this function returns the old document before the update
-        //ensures all schemas validation like amount>0 are checked on updated values
+        //new -> by default this function returns the old document before the update
+        //runValidators -> ensures all schemas validation like amount>0 are checked on updated values
 
     if (!updatedExpense) {
       throw new ApiError(404, "Expense not found");

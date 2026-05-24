@@ -1,6 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+// import authRouter from "./routes/authRoutes.js";
 import expenseRouter from "./routes/expenseRoute.js";
 import connectDB from "./config/db.js";
 import cors from "cors";
@@ -8,7 +9,6 @@ import cors from "cors";
 dotenv.config();
 
 const app = express();
-connectDB();
 
 app.use(cors({
     origin:process.env.CORS_ORIGIN?.split(",") || "http://localhost:5173",
@@ -29,6 +29,7 @@ app.get("/", (req, res) => {
 });
 
 // Expense routes
+//app.use("/api/v1/auth", authRouter);
 app.use("/api/v1", expenseRouter);
 
 // Error-handling middleware

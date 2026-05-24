@@ -1,6 +1,8 @@
 import { IndianRupee } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
+// This is the component of edit/add expense form. 
+//created a single, smart component that dynamically shapes itself based on what the parent component
 export default function Model({ isOpen, onClose, onSubmit, initialData }) {
   // form field states
   const [description, setDescription] = useState("");
@@ -8,8 +10,9 @@ export default function Model({ isOpen, onClose, onSubmit, initialData }) {
   const [date, setDate] = useState("");
   const [category, setCategory] = useState("");
   const [notes, setNotes] = useState("");
-
-  // populate form if editing
+//Itni saari states isiliye banayi kyunki mujhse nested object nhi ban paa raha tha. this is beginner friendly. 
+  
+  // if initial data exists, fill the boxes, it means that this is edit mode.
   useEffect(() => {
     if (initialData) {
       setDescription(initialData.description || "");
@@ -18,16 +21,18 @@ export default function Model({ isOpen, onClose, onSubmit, initialData }) {
       setCategory(initialData.category || "");
       setNotes(initialData.notes || "");
     } else {
-      // reset fields for adding new
+      // reset fields for adding new expense.
+      // agar ye nhi likhenege toh voh humesha old values hi fetch karega.
+      // if initial data is empty,clear the boxes
       setDescription("");
       setAmount("");
       setDate("");
       setCategory("");
       setNotes("");
     }
-  }, [initialData]);
+  }, [initialData]);//runs everytime initial data changes. -> conditional rendering
 
-  if(!isOpen) return null;
+  if(!isOpen) return null; // iska mtlb agar user ne form ko open hi nhi kiya hai for adding/editing an expense, toh kuch bhi nhi karenge hum.
 
   const handleSubmit = () => {
   // simple validation
@@ -36,7 +41,7 @@ export default function Model({ isOpen, onClose, onSubmit, initialData }) {
   const payload = {
     ...initialData,
     description,
-    amount,
+    amount: parseFloat(amount) || 0,
     date,
     category,
     notes,
@@ -124,16 +129,19 @@ export default function Model({ isOpen, onClose, onSubmit, initialData }) {
             <label className="block text-sm font-bold text-gray-700 mb-2">
               Category
             </label>
-            <select
+              <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
               className="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-indigo-500"
             >
               <option value="">Select category</option>
               <option>Food</option>
-              <option>Transport</option>
-              <option>Shopping</option>
+              <option>Transportation</option>
               <option>Entertainment</option>
+              <option>Shopping</option>
+              <option>Bills</option>
+              <option>Healthcare</option>
+              <option>Lent money to friends</option>
               <option>Other</option>
             </select>
           </div>
@@ -175,3 +183,7 @@ export default function Model({ isOpen, onClose, onSubmit, initialData }) {
     </div>
   );
 }
+/* how is this code handling props of sending edited info as well as adding expense. 
+...initialdata ka mtlb jo expense humne create kiya tha, usmein we added id and timestamp. TOh we need those fields before editing an expense, taake pata chale ki kaun sa expense edit karna hai 
+But jab hum add ex pense kar rahe honge toh ...intialdata is null. and after this it calls savehandleexpense. 
+*/

@@ -1,4 +1,4 @@
-//yaha database mongodb ko connect karte hai aoni application se using url
+//yaha database mongodb ko connect karte hai apni application se using url
 
 import dotenv from "dotenv";
 dotenv.config(); //  MUST be first
