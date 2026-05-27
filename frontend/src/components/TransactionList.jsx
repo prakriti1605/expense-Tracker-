@@ -10,14 +10,7 @@ function TransactionList({
   filterCategory,
   setFilterCategory,
 }) {
-  const categories = [
-    "Food",
-    "Shopping",
-    "Entertainment",
-    "Bills",
-    "Healthcare",
-    "Other",
-  ];
+  const categories = ["Food", "Shopping", "Entertainment", "Bills", "Healthcare", "Other"];
 
   const getCategoryColor = (category) => {
     const colors = {
@@ -31,163 +24,97 @@ function TransactionList({
     return colors[category] || colors.Other;
   };
 
-  // 🔍 Filter logic
   const filteredExpenses = expenses.filter((expense) => {
     const matchesSearch =
-      (expense.description || "")
-        .toLowerCase()
-        .includes((searchTerm || "").toLowerCase()) ||
-      (expense.notes || "")
-        .toLowerCase()
-        .includes((searchTerm || "").toLowerCase());
-
-    const matchesCategory =
-      filterCategory === "All" || expense.category === filterCategory;
-
+      (expense.description || "").toLowerCase().includes((searchTerm || "").toLowerCase()) ||
+      (expense.notes || "").toLowerCase().includes((searchTerm || "").toLowerCase());
+    const matchesCategory = filterCategory === "All" || expense.category === filterCategory;
     return matchesSearch && matchesCategory;
   });
 
-  const totalAmount = filteredExpenses.reduce(
-    (sum, e) => sum + Number(e.amount || 0),
-    0
-  );
+  const totalAmount = filteredExpenses.reduce((sum, e) => sum + Number(e.amount || 0), 0);
 
   return (
-    <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+    // Replaced bg-white with glass-panel
+    <div className="glass-panel rounded-[28px] p-6 shadow-xl transition-all">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h3 className="text-xl font-bold text-gray-900">Transactions</h3>
-          <p className="text-sm text-gray-500 mt-1">
-            {filteredExpenses.length} total
-          </p>
+          <h3 className="text-xl font-black tracking-tight">Transactions</h3>
+          <p className="text-xs font-semibold opacity-50 mt-1">{filteredExpenses.length} total</p>
         </div>
-        <div className="px-4 py-2 bg-gray-700 text-white rounded-full text-sm font-bold">
+        <div className="px-4 py-2 bg-[#8B5CF6] text-white rounded-2xl text-sm font-extrabold shadow-lg shadow-[#8B5CF6]/20">
           ₹{totalAmount.toFixed(2)}
         </div>
       </div>
 
       {/* Search & Filter */}
-      <div className="flex gap-3 mb-5">
+      <div className="flex gap-3 mb-6">
         <div className="flex-1 relative">
-          <Search className="absolute left-3.5 top-3.5 w-4 h-4 text-gray-400" />
+          <Search className="absolute left-4 top-[14px] w-4 h-4 opacity-40" />
           <input
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             type="text"
             placeholder="Search transactions..."
-            className="w-full pl-10 pr-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl text-sm focus:outline-none focus:border-indigo-500"
+            className="w-full pl-11 pr-4 py-3 bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/5 rounded-2xl text-sm focus:outline-none focus:border-[#8B5CF6] transition-all placeholder:opacity-40"
           />
         </div>
 
         <select
           value={filterCategory}
           onChange={(e) => setFilterCategory(e.target.value)}
-          className="px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl text-sm font-semibold text-gray-700 focus:outline-none focus:border-indigo-500 cursor-pointer"
+          className="px-4 py-3 bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/5 rounded-2xl text-sm font-bold opacity-80 focus:outline-none cursor-pointer"
         >
-          <option value="All">All</option>
+          <option value="All">All Categories</option>
           {categories.map((cat) => (
-            <option key={cat} value={cat}>
-              {cat}
-            </option>
+            <option key={cat} value={cat}>{cat}</option>
           ))}
         </select>
       </div>
 
       {/* Transactions List */}
-      <div className="space-y-3 max-h-[480px] overflow-y-auto pr-2">
+      <div className="space-y-3 max-h-[480px] overflow-y-auto pr-2 custom-scrollbar">
         {filteredExpenses.length === 0 ? (
-          <div className="text-center py-16">
-            <div className="w-20 h-20 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-              <Receipt className="w-10 h-10 text-gray-400" />
-            </div>
-            <p className="text-gray-600 font-semibold">
-              No transactions found
-            </p>
-            <p className="text-sm text-gray-400 mt-1">
-              Try different filters
-            </p>
+          <div className="text-center py-16 opacity-40">
+            <Receipt className="w-12 h-12 mx-auto mb-4 opacity-20" />
+            <p className="font-bold">No transactions found</p>
           </div>
         ) : (
           filteredExpenses.map((expense) => (
             <div
               key={expense._id}
-              className="flex items-center gap-4 p-4 bg-gradient-to-r from-gray-50 to-white hover:from-white hover:to-gray-50 border-2 border-gray-100 rounded-xl transition-all group"
+              className="flex items-center gap-4 p-4 bg-black/[0.02] dark:bg-white/[0.02] hover:bg-black/[0.05] dark:hover:bg-white/[0.05] border border-black/5 dark:border-white/5 rounded-2xl transition-all group"
             >
-              {/* Category Indicator */}
               <div
-                className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm"
-                style={{
-                  backgroundColor:
-                    getCategoryColor(expense.category) + "20",
-                }}
+                className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+                style={{ backgroundColor: getCategoryColor(expense.category) + "15" }}
               >
-                <div
-                  className="w-2.5 h-2.5 rounded-full"
-                  style={{
-                    backgroundColor: getCategoryColor(expense.category),
-                  }}
-                />
+                <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: getCategoryColor(expense.category) }} />
               </div>
 
-              {/* Details */}
               <div className="flex-1 min-w-0">
-                <div className="flex items-start justify-between gap-3 mb-1">
-                  <h4 className="font-bold text-gray-900 truncate">
-                    {expense.description}
-                  </h4>
-                  <span className="text-xl font-bold text-gray-900 whitespace-nowrap">
-                    ₹{Number(expense.amount).toFixed(2)}
-                  </span>
+                <div className="flex items-center justify-between gap-3 mb-0.5">
+                  <h4 className="font-bold truncate">{expense.description}</h4>
+                  <span className="text-lg font-black tracking-tight">₹{Number(expense.amount).toFixed(2)}</span>
                 </div>
 
-                <div className="flex items-center gap-2 text-xs">
-                  <span
-                    className="px-2.5 py-1 rounded-lg font-bold"
-                    style={{
-                      backgroundColor:
-                        getCategoryColor(expense.category) + "15",
-                      color: getCategoryColor(expense.category),
-                    }}
-                  >
+                <div className="flex items-center gap-2 text-[11px] font-bold opacity-60">
+                  <span className="px-2 py-0.5 rounded-md" style={{ backgroundColor: getCategoryColor(expense.category) + "15", color: getCategoryColor(expense.category) }}>
                     {expense.category}
                   </span>
-
-                  <span className="text-gray-400">•</span>
-
-                  <span className="text-gray-500 font-medium">
-                    {new Date(expense.date).toLocaleDateString("en-US", {
-                      month: "short",
-                      day: "numeric",
-                    })}
-                  </span>
-
-                  {expense.notes && (
-                    <>
-                      <span className="text-gray-400">•</span>
-                      <span className="text-gray-500 font-medium truncate">
-                        {expense.notes}
-                      </span>
-                    </>
-                  )}
+                  <span>•</span>
+                  <span>{new Date(expense.date).toLocaleDateString("en-US", { month: "short", day: "numeric" })}</span>
                 </div>
+              </div>
 
-                {/* Actions */}
-                <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all mt-2">
-                  <button
-                    onClick={() => onEdit(expense)}
-                    className="p-2.5 bg-indigo-500 text-white hover:bg-indigo-600 rounded-xl shadow-sm"
-                  >
-                    <Edit2 className="w-4 h-4" strokeWidth={2.5} />
-                  </button>
-
-                  <button
-                    onClick={() => onDelete(expense._id)}
-                    className="p-2.5 bg-red-500 text-white hover:bg-red-600 rounded-xl shadow-sm"
-                  >
-                    <Trash2 className="w-4 h-4" strokeWidth={2.5} />
-                  </button>
-                </div>
+              <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                <button onClick={() => onEdit(expense)} className="p-2 bg-indigo-500/20 text-[#8B5CF6] hover:bg-[#8B5CF6] hover:text-white rounded-xl transition">
+                  <Edit2 className="w-4 h-4" />
+                </button>
+                <button onClick={() => onDelete(expense._id)} className="p-2 bg-red-500/20 text-red-500 hover:bg-red-500 hover:text-white rounded-xl transition">
+                  <Trash2 className="w-4 h-4" />
+                </button>
               </div>
             </div>
           ))

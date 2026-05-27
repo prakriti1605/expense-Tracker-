@@ -1,27 +1,23 @@
-import React from 'react'
-import { Plus } from 'lucide-react'
+// components/header.jsx
+import React from 'react';
 
-const Header = ({ onAddExpense }) => {
-    return (
-        <div className='bg-white shadow-lg'>
-            <div className='max-w-7xl mx-auto px-6 py-6 lg:py-4 flex items-center justify-between'>
-                <div>
-                    <h1 className='text-3xl font-bold text-gray-700 lg:text-4xl mb-1'>
-                        Expense Tracker
-                    </h1>
-                    <p className='text-gray-700'>Manage your finance with ease</p>
-                </div>
-                <div className='flex items-center gap-3'>
-                    <button
-                        onClick={onAddExpense}  
-                        className='px-4 py-2 bg-gray-600 text-white rounded-xl font-semibold hover:shadow-2xl transition-all flex items-center gap-2'
-                    >
-                        <Plus className='w-4 h-4' /> Add Expense
-                    </button>
-                </div>
-            </div>
-        </div>
-    )
+function Header({ onAddExpense }) {
+  return (
+    /* CHANGE: Swap out 'bg-white shadow-md rounded-xl p-6' for our class */
+    <div className="glass-panel rounded-[24px] p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 w-full max-w-4xl">
+      <div>
+        <h1 className="text-3xl font-black tracking-tight">Expense Tracker</h1>
+        <p className="text-sm font-medium opacity-60 mt-1">Manage your finance with ease</p>
+      </div>
+      
+      <button
+        onClick={onAddExpense}
+        className="bg-gradient-to-r from-[#8B5CF6] to-[#22D3EE] text-white font-extrabold px-6 py-3 rounded-2xl shadow-lg hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer text-sm flex items-center gap-2"
+      >
+        <span className="text-lg font-normal">+</span> Add Expense
+      </button>
+    </div>
+  );
 }
 
-export default Header
+export default Header;

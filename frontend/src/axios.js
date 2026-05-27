@@ -3,17 +3,26 @@ import axios from "axios";
 const BASE_URL = "http://localhost:8000/api/v1";
 
 const api = axios.create({baseURL:BASE_URL, timeout: 8000});
-// api.interceptors.request.use((config) => {
+api.interceptors.request.use((config) => {
 
-//     const token = localStorage.getItem("token");
+    const token = localStorage.getItem("token");
+    console.log(token);
+    if(token){
+        config.headers.Authorization = `Bearer ${token}`;
+    }
 
-//     if(token){
-//         config.headers.Authorization = `Bearer ${token}`;
-//     }
+    return config;
+});
+// Add these to your existing axios.js file
+export const loginUser = async (credentials) => {
+    const res = await api.post("/auth/login", credentials);
+    return res.data; // Should return { token: "..." }
+};
 
-//     return config;
-// });
-
+export const signupUser = async (userData) => {
+    const res = await api.post("/auth/signup", userData);
+    return res.data;
+};
 //expense api
 export const getExpenses = async () => {
     const res = await api.get("/expense");

@@ -1,15 +1,9 @@
-# Expense Creation 500 Error Fix - TODO
+# TODO - fixes
 
-## Plan Breakdown (Approved)
-1. ✅ [Complete] Analyze files and confirm root cause (category enum mismatch)
-2. ✅ [Complete] Updated Model.jsx: Fixed category options to match schema enum, parseFloat(amount)
-3. ✅ [Complete] Updated expense.controller.js: Better error logging
-4. ✅ [Complete] App.jsx: Reviewed payload handling (amount already handled in Model)
-5. ✅ [Complete] Model.jsx amount conversion
-6. ✅ [Complete] Tested: Restart server, expense creation works without 500 errors
-7. ✅ [Complete] Task finished
+- [ ] Fix 401 Unauthorized on /api/v1/expense
+  - [ ] Patch `server/middleware/authMiddleware.js` to correctly import `User` model before using it
+  - [ ] (Optional) Add better error details/logging in middleware to distinguish JWT_SECRET vs runtime errors
+- [ ] Fix Recharts warnings (width/height -1)
+  - [ ] Ensure chart containers have non-collapsing height in dashboard layout
+- [ ] Re-test dashboard flow after auth fix
 
-**Progress**: All steps done. Root cause fixed (category enum mismatch). Creation succeeds.
-
----
-**TASK COMPLETE** - Check TODO.md for summary.

@@ -1,42 +1,34 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+/* app.css
+@import "tailwindcss"; */
+
+/* ☀️ Light Mode State Variables */
+:root {
+  --brand-bg: #f8fafc;        
+  --brand-card: #ffffff;      
+  --brand-text: #0f172a;      
+  --brand-border: rgba(0, 0, 0, 0.08);
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+/* 🌙 Dark Mode State Variables */
+.dark-mode-active {
+  --brand-bg: #0B0F19;        
+  --brand-card: rgba(19, 26, 44, 0.7); 
+  --brand-text: #f8fafc;      
+  --brand-border: rgba(255, 255, 255, 0.1); 
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Apply variables to the document body structure */
+body {
+  background-color: var(--brand-bg);
+  color: var(--brand-text);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
-}
+/* Frosted Glass Component Panels */
+.glass-panel {
+  background-color: var(--brand-card) !important;
+  color: var(--brand-text) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--brand-border) !important;
+} 

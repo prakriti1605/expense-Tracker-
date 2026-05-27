@@ -1,18 +1,13 @@
-import { IndianRupee } from "lucide-react";
+import { IndianRupee, X } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
-// This is the component of edit/add expense form. 
-//created a single, smart component that dynamically shapes itself based on what the parent component
 export default function Model({ isOpen, onClose, onSubmit, initialData }) {
-  // form field states
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState("");
   const [date, setDate] = useState("");
   const [category, setCategory] = useState("");
   const [notes, setNotes] = useState("");
-//Itni saari states isiliye banayi kyunki mujhse nested object nhi ban paa raha tha. this is beginner friendly. 
-  
-  // if initial data exists, fill the boxes, it means that this is edit mode.
+
   useEffect(() => {
     if (initialData) {
       setDescription(initialData.description || "");
@@ -21,169 +16,137 @@ export default function Model({ isOpen, onClose, onSubmit, initialData }) {
       setCategory(initialData.category || "");
       setNotes(initialData.notes || "");
     } else {
-      // reset fields for adding new expense.
-      // agar ye nhi likhenege toh voh humesha old values hi fetch karega.
-      // if initial data is empty,clear the boxes
       setDescription("");
       setAmount("");
-      setDate("");
+      setDate(new Date().toISOString().split("T")[0]); // Default to today
       setCategory("");
       setNotes("");
     }
-  }, [initialData]);//runs everytime initial data changes. -> conditional rendering
+  }, [initialData, isOpen]);
 
-  if(!isOpen) return null; // iska mtlb agar user ne form ko open hi nhi kiya hai for adding/editing an expense, toh kuch bhi nhi karenge hum.
+  if (!isOpen) return null;
 
-  const handleSubmit = () => {
-  // simple validation
-  if (!description || !amount || !category) return;
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!description || !amount || !category) return;
 
-  const payload = {
-    ...initialData,
-    description,
-    amount: parseFloat(amount) || 0,
-    date,
-    category,
-    notes,
+    const payload = {
+      ...(initialData || {}),
+      description,
+      amount: parseFloat(amount) || 0,
+      date,
+      category,
+      notes,
+    };
+
+    onSubmit(payload);
+    onClose();
   };
 
-  onSubmit(payload);  // ✅ only send data, no DOM elements
-  onClose();
-
-  // reset fields
-  setDescription("");
-  setAmount("");
-  setDate("");
-  setCategory("");
-  setNotes("");
-};
-
-
   return (
-    <div className="fixed inset-0 bg-black/30 backdrop-blur-lg z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl">
-
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      {/* Added 'glass-panel' for the premium look */}
+      <div className="glass-panel w-full max-w-lg rounded-[32px] p-8 shadow-2xl animate-in fade-in zoom-in duration-300">
+        
         {/* Header */}
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center justify-between mb-6">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900">{initialData ? "Edit Expense" : "Add Expense"}</h2>
-            <p className="text-sm text-gray-500 mt-1">Track your spending</p>
+            <h2 className="text-2xl font-black tracking-tight">
+              {initialData ? "Edit Expense" : "Add Expense"}
+            </h2>
+            <p className="text-sm font-medium opacity-50 mt-1">
+              {initialData ? "Update your transaction details" : "Record a new spending"}
+            </p>
           </div>
           <button 
-          onClick={onClose}
-          className="p-2 hover:bg-gray-100 rounded-full transition">
-            ✕
+            onClick={onClose}
+            className="p-2 hover:bg-black/5 dark:hover:bg-white/10 rounded-full transition"
+          >
+            <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Form */}
-        <div className="space-y-4">
-
-          {/* Description */}
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-bold text-gray-700 mb-2">
-              What did you buy
-            </label>
+            <label className="block text-xs font-bold opacity-70 mb-2 uppercase tracking-wider">What did you buy?</label>
             <input
               type="text"
-              placeholder="Enter description"
-              value = {description}
-              onChange = {(e) => setDescription(e.target.value)}
-              className="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-indigo-500"
+              placeholder="e.g., Weekly Groceries"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              className="w-full px-4 py-3 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#8B5CF6]/50"
             />
           </div>
 
-          {/* Amount & Date */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-bold text-gray-700 mb-2">
-                Amount
-              </label>
+              <label className="block text-xs font-bold opacity-70 mb-2 uppercase tracking-wider">Amount</label>
               <div className="relative">
-                <IndianRupee className="absolute left-3 top-3.5 w-5 h-5 text-gray-400" />
+                <IndianRupee className="absolute left-3 top-3.5 w-4 h-4 opacity-40" />
                 <input
                   type="number"
                   placeholder="0.00"
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-indigo-500"
+                  className="w-full pl-10 pr-4 py-3 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#8B5CF6]/50"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-bold text-gray-700 mb-2">
-                Date
-              </label>
+              <label className="block text-xs font-bold opacity-70 mb-2 uppercase tracking-wider">Date</label>
               <input
                 type="date"
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
-                className="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-indigo-500"
+                className="w-full px-4 py-3 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#8B5CF6]/50"
               />
             </div>
           </div>
 
-          {/* Category */}
           <div>
-            <label className="block text-sm font-bold text-gray-700 mb-2">
-              Category
-            </label>
-              <select
+            <label className="block text-xs font-bold opacity-70 mb-2 uppercase tracking-wider">Category</label>
+            <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-indigo-500"
+              className="w-full px-4 py-3 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#8B5CF6]/50"
             >
               <option value="">Select category</option>
-              <option>Food</option>
-              <option>Transportation</option>
-              <option>Entertainment</option>
-              <option>Shopping</option>
-              <option>Bills</option>
-              <option>Healthcare</option>
-              <option>Lent money to friends</option>
-              <option>Other</option>
+              {["Food", "Transportation", "Entertainment", "Shopping", "Bills", "Healthcare", "Lent money to friends", "Other"].map(cat => (
+                <option key={cat} value={cat}>{cat}</option>
+              ))}
             </select>
           </div>
 
-          {/* Notes */}
           <div>
-            <label className="block text-sm font-bold text-gray-700 mb-2">
-              Notes
-            </label>
+            <label className="block text-xs font-bold opacity-70 mb-2 uppercase tracking-wider">Notes</label>
             <textarea
-            name = "notes"
-            value={notes}
-            onChange={(e) => setNotes(e.target.value)}
-            rows="3"
-            placeholder="Add additional details"
-            className="w-full px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl resize-none focus:outline-none focus:border-indigo-500"
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              rows="2"
+              placeholder="Optional details..."
+              className="w-full px-4 py-3 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-2xl resize-none focus:outline-none focus:ring-2 focus:ring-[#8B5CF6]/50"
             />
           </div>
 
-          {/* Buttons */}
-          <div className="flex gap-3 pt-2">
+          <div className="flex gap-3 pt-4">
             <button
-            onClick={handleSubmit}
-              className="flex-1 py-3 rounded-xl bg-gray-800 text-white font-semibold hover:bg-gray-900 transition"
-            >
-            {initialData ? "save changes" : "add expense"}
-            </button>
-            <button
+              type="button"
               onClick={onClose}
-
-              className="px-6 py-3 rounded-xl border-2 border-gray-300 text-gray-700 font-semibold hover:bg-gray-100 transition"
+              className="flex-1 py-3.5 rounded-2xl bg-black/5 dark:bg-white/5 font-bold hover:opacity-70 transition"
             >
               Cancel
             </button>
+            <button
+              type="submit"
+              className="flex-1 py-3.5 rounded-2xl bg-gradient-to-r from-[#8B5CF6] to-[#22D3EE] text-white font-bold shadow-lg shadow-[#8B5CF6]/20 hover:scale-[102%] transition-transform"
+            >
+              {initialData ? "Save Changes" : "Add Expense"}
+            </button>
           </div>
-
-        </div>
+        </form>
       </div>
     </div>
   );
 }
-/* how is this code handling props of sending edited info as well as adding expense. 
-...initialdata ka mtlb jo expense humne create kiya tha, usmein we added id and timestamp. TOh we need those fields before editing an expense, taake pata chale ki kaun sa expense edit karna hai 
-But jab hum add ex pense kar rahe honge toh ...intialdata is null. and after this it calls savehandleexpense. 
-*/
