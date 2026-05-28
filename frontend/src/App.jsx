@@ -5,7 +5,7 @@ Route → defines a page URL
 Navigate → redirects users
 useNavigate → code se manually page change karna */
 
-import Login from "./pages/Login";
+import Login from "./pages/login";
 import Dashboard from "./pages/Dashboard";
 
 function App() {
