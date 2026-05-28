@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:8000/api/v1";
+const BASE_URL = "https://expense-tracker-production-cc99.up.railway.app/api/v1";
 
 const api = axios.create({baseURL:BASE_URL, timeout: 8000});
 api.interceptors.request.use((config) => {
