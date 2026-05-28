@@ -1,6 +1,5 @@
 import express from "express";
 import cors from "cors";
-
 import dotenv from "dotenv";
 
 import authRouter from "./routes/authRoutes.js";
@@ -9,31 +8,45 @@ import expenseRouter from "./routes/expenseRoute.js";
 dotenv.config();
 
 const app = express();
-const allowedOrigins = process.env.CORS_ORIGIN?.split(",") || ["http://localhost:5173"];
+
+// 1. CORS Configuration
+const allowedOrigins = [
+  "https://expense-tracker-pi-cyan.vercel.app",
+  "https://expense-tracker-git-main-prakritijain1205-7523s-projects.vercel.app",
+  "https://expense-tracker-b43z6vf7w-prakritijain1205-7523s-projects.vercel.app"
+];
+
 app.use(cors({
-    origin:allowedOrigins,
-    credentials:true,
-    methods:["GET","POST","PUT","PATCH","DELETE"],
-    allowedHeaders:["Content-Type","Authorization"]
+  origin: function (origin, callback) {
+    // !origin check zaroori hai kyunki server-to-server calls mein origin undefined hota hai
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
-// Middleware to parse JSON and URL-encoded bodies
+// 2. Middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-
-// Test routes
+// 3. Test route
 app.get("/health", (req, res) => {
   res.status(200).json({
-    success:true,
-    message:"API is healthy",
+    success: true,
+    message: "API is healthy",
   });
 });
 
-// routes
+// 4. Routes
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/expense", expenseRouter);
-// 404 error
+
+// 5. 404 handler
 app.use((req, res) => {
   res.status(404).json({
     success: false,
@@ -41,16 +54,14 @@ app.use((req, res) => {
   });
 });
 
-
-// Global Error-handling middleware
+// 6. Global Error-handling middleware
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
-  
   res.status(statusCode).json({
-    success:false,
-    message:err.message || "Internal server error ",
-    errors:err.errors||[],
-    data:err.data || null,
+    success: false,
+    message: err.message || "Internal server error",
+    errors: err.errors || [],
+    data: err.data || null,
   });
 });
 
