@@ -6,7 +6,6 @@ import {ApiResponse} from "../utils/api-response.js";
 import { asyncHandler } from "../utils/asyncHnadler.js";
 
 //signup
-import jwt from "jsonwebtoken"; // Ensure you have imported this
 
 export const signup = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body;
