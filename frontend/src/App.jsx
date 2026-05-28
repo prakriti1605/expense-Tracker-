@@ -6,7 +6,7 @@ Navigate → redirects users
 useNavigate → code se manually page change karna */
 
 import Login from "./pages/login";
-import Dashboard from "./pages/Dashboard";
+import Dashboard from "./pages/dashboard";
 
 function App() {
   const [token, setToken] = useState(null);
