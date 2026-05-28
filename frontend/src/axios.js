@@ -16,12 +16,12 @@ api.interceptors.request.use((config) => {
 // Add these to your existing axios.js file
 export const loginUser = async (credentials) => {
     const res = await api.post("/auth/login", credentials);
-    return res.data; // Should return { token: "..." }
+    return res; // Should return { token: "..." }
 };
 
 export const signupUser = async (userData) => {
     const res = await api.post("/auth/signup", userData);
-    return res.data;
+    return res;
 };
 //expense api
 export const getExpenses = async () => {

@@ -17,7 +17,7 @@ export default function Auth({ setToken }) {
       
       // Is line ko dhyaan se dekhein: 
       // Yeh 'res.data.data.token' (ApiResponse wrapper) ya 'res.data.token' dono ko check karega
-      const token = res.data?.data?.token || res.data?.token;
+      const token = res.data?.data?.token;
 
       if (!token) {
         console.error("DEBUG: Response structure:", res.data); // Console mein dekhein
