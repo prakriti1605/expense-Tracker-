@@ -14,16 +14,22 @@ export default function Auth({ setToken }) {
 
     try {
       const res = isLogin ? await loginUser(payload) : await signupUser(payload);
-      const token = res.data?.token;
+      
+      // Is line ko dhyaan se dekhein: 
+      // Yeh 'res.data.data.token' (ApiResponse wrapper) ya 'res.data.token' dono ko check karega
+      const token = res.data?.data?.token || res.data?.token;
 
-      if (!token) throw new Error("No token received");
+      if (!token) {
+        console.error("DEBUG: Response structure:", res.data); // Console mein dekhein
+        throw new Error("No token received in response");
+      }
 
       localStorage.setItem("token", token);
       setToken(token);
       navigate("/");
     } catch (err) {
       console.error("Auth error", err);
-      alert("Authentication failed. Please check your credentials.");
+      alert("Error: " + (err.response?.data?.message || err.message));
     }
   };
 
