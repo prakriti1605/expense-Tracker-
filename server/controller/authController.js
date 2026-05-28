@@ -6,8 +6,10 @@ import {ApiResponse} from "../utils/api-response.js";
 import { asyncHandler } from "../utils/asyncHnadler.js";
 
 //signup
+import jwt from "jsonwebtoken"; // Ensure you have imported this
+
 export const signup = asyncHandler(async (req, res) => {
-const { name, email, password } = req.body;
+  const { name, email, password } = req.body;
 
   if (!name || !email || !password) {
     throw new ApiError(400, "All fields are required");
@@ -26,12 +28,21 @@ const { name, email, password } = req.body;
     password: hashedPassword,
   });
 
+  // JWT Token Generate karein
+  // ACCESS_TOKEN_SECRET aapke .env file mein hona chahiye
+  const token = jwt.sign(
+    { _id: user._id, email: user.email },
+    process.env.JWT_SECRET || "ffihaofbhvzviwu8429AGIG8HALGB",
+    { expiresIn: "3d" }
+  );
+
   return res.status(201).json(
     new ApiResponse(
       201,
       {
         userId: user._id,
         email: user.email,
+        token: token, // Ab token response mein jayega
       },
       "User created successfully"
     )
@@ -60,7 +71,7 @@ export const login = asyncHandler(async (req, res) => {
   const token = jwt.sign(
     { id: user._id }, // iss id ka token generate karna hai
     process.env.JWT_SECRET, //ye ek secret hai jo humne .env file mein likha hai. Iss token se sign hoga. 
-    { expiresIn: "7d" } //kab expire hoga.
+    { expiresIn: "3d" } //kab expire hoga.
   );
 // yaha se hum token ko client ke pass bhejte hai taaki jab voh baad mein request send kare toh hum verify kar paye. 
   return res.status(200).json(
