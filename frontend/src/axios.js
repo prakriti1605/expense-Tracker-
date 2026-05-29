@@ -2,31 +2,51 @@ import axios from "axios";
 
 const BASE_URL = "https://expense-tracker-production-cc99.up.railway.app/api/v1";
 
-const api = axios.create({baseURL:BASE_URL, timeout: 8000});
-api.interceptors.request.use((config) => {
+const api = axios.create({ 
+    baseURL: BASE_URL, 
+    timeout: 10000 
+});
 
+// Interceptor: Har request ke saath token automatically attach karega
+api.interceptors.request.use((config) => {
     const token = localStorage.getItem("token");
-    console.log(token);
-    if(token){
+    
+    // Debugging ke liye (Console mein check karein)
+    console.log("Interceptor - Token found:", token ? "Yes" : "No");
+    
+    if (token) {
         config.headers.Authorization = `Bearer ${token}`;
     }
-
     return config;
+}, (error) => {
+    return Promise.reject(error);
 });
-// Add these to your existing axios.js file
-export const loginUser = async (credentials) => {
-    const res = await api.post("/auth/login", credentials);
-    return res; // Should return { token: "..." }
-};
 
+// Authentication functions
 export const signupUser = async (userData) => {
     const res = await api.post("/auth/signup", userData);
     return res;
 };
-//expense api
+
+export const loginUser = async (credentials) => {
+    const res = await api.post("/auth/login", credentials);
+    
+    // Fix: Server se aaye hue token ko yahan store karna zaroori hai
+    if (res.data && res.data.token) {
+        localStorage.setItem("token", res.data.token);
+    }
+    return res;
+};
+
+// Expense API functions
 export const getExpenses = async () => {
-    const res = await api.get("/expense");
-    return (res.data && res.data.data) || [];
+    try {
+        const res = await api.get("/expense");
+        return (res.data && res.data.data) || [];
+    } catch (error) {
+        console.error("Error fetching expenses:", error);
+        throw error;
+    }
 };
 
 export const createExpense = async(payload)=>{
