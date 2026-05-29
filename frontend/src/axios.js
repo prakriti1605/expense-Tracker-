@@ -25,6 +25,9 @@ api.interceptors.request.use((config) => {
 // Authentication functions
 export const signupUser = async (userData) => {
     const res = await api.post("/auth/signup", userData);
+    if (res.data && res.data.token) {
+        localStorage.setItem("token", res.data.token);
+    }
     return res;
 };
 
