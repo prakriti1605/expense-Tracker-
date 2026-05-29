@@ -25,9 +25,14 @@ api.interceptors.request.use((config) => {
 // Authentication functions
 export const signupUser = async (userData) => {
     const res = await api.post("/auth/signup", userData);
-    if (res.data && res.data.token) {
+    if (res.data && res.data.data && res.data.data.token) {
+        localStorage.setItem("token", res.data.data.token);
+    } else if (res.data && res.data.token) {
+        // Fallback just in case it is structured differently
         localStorage.setItem("token", res.data.token);
     }
+    
+    return res;
     return res;
 };
 
