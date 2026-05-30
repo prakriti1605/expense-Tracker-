@@ -4,7 +4,7 @@ const BASE_URL = "https://expense-tracker-production-95c6.up.railway.app/api/v1"
 
 const api = axios.create({ 
     baseURL: BASE_URL, 
-    timeout: 10000 
+    timeout: 30000 
 });
 
 // Interceptor: Har request ke saath token automatically attach karega
