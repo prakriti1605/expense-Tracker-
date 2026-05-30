@@ -30,8 +30,9 @@ export const signup = asyncHandler(async (req, res) => {
   // JWT Token Generate karein
   
   const token = jwt.sign(
-    { _id: user._id, email: user.email },
-    process.env.JWT_SECRET || "ffihaofbhvzviwu8429AGIG8HALGB",
+    { id: user._id, 
+      email: user.email },
+      process.env.JWT_SECRET || "ffihaofbhvzviwu8429AGIG8HALGB",
     { expiresIn: "3d" }
   );
 
