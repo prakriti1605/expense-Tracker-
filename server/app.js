@@ -11,9 +11,8 @@ const app = express();
 
 // 1. CORS Configuration
 const allowedOrigins = [
+  "http://localhost:5173",
   "https://expense-tracker-git-auth-fix-prakritijain1205-7523s-projects.vercel.app",
-  
-  // Your permanent main production link (For when you merge later)
   "https://expense-tracker-pi-cyan.vercel.app"
 ];
 

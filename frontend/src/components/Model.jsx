@@ -7,6 +7,10 @@ export default function Model({ isOpen, onClose, onSubmit, initialData }) {
   const [date, setDate] = useState("");
   const [category, setCategory] = useState("");
   const [notes, setNotes] = useState("");
+  const [amountError, setAmountError] = useState("");
+  const [dateError, setDateError] = useState("");
+
+  const today = new Date().toISOString().split("T")[0];
 
   useEffect(() => {
     if (initialData) {
@@ -29,7 +33,14 @@ export default function Model({ isOpen, onClose, onSubmit, initialData }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!description || !amount || !category) return;
-
+    if (Number(amount) <= 0) {
+    setAmountError("Amount must be greater than 0");
+    return;
+    if (date > today) {
+    setDateError("Expense date cannot be in the future");
+    return;
+  }
+  }
     const payload = {
       ...(initialData || {}),
       description,
@@ -86,11 +97,18 @@ export default function Model({ isOpen, onClose, onSubmit, initialData }) {
                 <IndianRupee className="absolute left-3 top-3.5 w-4 h-4 opacity-40" />
                 <input
                   type="number"
+                  min="0.01"
+                  step="0.01"
                   placeholder="0.00"
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
                   className="w-full pl-10 pr-4 py-3 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#8B5CF6]/50"
                 />
+                {amountError && (
+                  <p className="mt-1 text-sm text-red-500">
+                    {amountError}
+                  </p>
+                )}
               </div>
             </div>
 
@@ -98,10 +116,24 @@ export default function Model({ isOpen, onClose, onSubmit, initialData }) {
               <label className="block text-xs font-bold opacity-70 mb-2 uppercase tracking-wider">Date</label>
               <input
                 type="date"
+                max={today}
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
-                className="w-full px-4 py-3 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#8B5CF6]/50"
+                className="
+                  w-full
+                  px-4 py-3
+                  bg-black/5 dark:bg-white/5
+                  border border-black/10 dark:border-white/10
+                  rounded-2xl
+                  focus:outline-none
+                  focus:ring-2
+                  focus:ring-[#8B5CF6]/50
+                  [&::-webkit-calendar-picker-indicator]:invert"
               />
+              {dateError && (
+              <p className="mt-1 text-sm text-red-500">
+                {dateError}
+              </p>)}
             </div>
           </div>
 
@@ -110,11 +142,29 @@ export default function Model({ isOpen, onClose, onSubmit, initialData }) {
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="w-full px-4 py-3 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#8B5CF6]/50"
+              className="w-full px-4 py-3 bg-white text-gray-900 dark:bg-gray-800 dark:text-white border border-black/10 dark:border-white/10 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#8B5CF6]/50"
             >
-              <option value="">Select category</option>
-              {["Food", "Transportation", "Entertainment", "Shopping", "Bills", "Healthcare", "Lent money to friends", "Other"].map(cat => (
-                <option key={cat} value={cat}>{cat}</option>
+              <option value="" className="bg-white text-gray-900 dark:bg-gray-800 dark:text-white">
+                Select category
+              </option>
+
+              {[
+                "Food",
+                "Transportation",
+                "Entertainment",
+                "Shopping",
+                "Bills",
+                "Healthcare",
+                "Lent money to friends",
+                "Other",
+              ].map((cat) => (
+                <option
+                  key={cat}
+                  value={cat}
+                  className="bg-white text-gray-900 dark:bg-gray-800 dark:text-white"
+                >
+                  {cat}
+                </option>
               ))}
             </select>
           </div>
