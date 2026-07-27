@@ -1,4 +1,4 @@
-name: Expense Tracker CI
+name: CI
 
 on:
   push:
