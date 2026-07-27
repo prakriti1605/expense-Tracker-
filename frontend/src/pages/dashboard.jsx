@@ -136,8 +136,8 @@ return (
       style={{ backgroundColor: "var(--brand-bg)", color: "var(--brand-text)" }}
     >
       {/* Navigation Top Bar */}
-      <div className="max-w-7xl mx-auto px-6 flex justify-between items-center mb-4">
-        <Header onAddExpense={openAddExpenseModal} />
+<div className="w-full px-8 flex justify-between items-center mb-4">
+          <Header onAddExpense={openAddExpenseModal} />
 
         <div className="flex items-center gap-4">
           {/* Theme Toggle Button */}
@@ -163,7 +163,7 @@ return (
       </div>
 
       {/* Main Content View Frame */}
-      <div className="max-w-7xl mx-auto px-6 space-y-8 pb-12">
+      <div className="w-full px-8 space-y-8 pb-12">
         {/* Stat Cards Grid Row */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           <StatCard 
